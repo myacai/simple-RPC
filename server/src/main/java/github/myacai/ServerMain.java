@@ -1,5 +1,6 @@
 package github.myacai;
 
+import github.myacai.registry.DefaultServiceRegistry;
 import github.myacai.server.HelloServiceImpl;
 import github.myacai.server.IHelloService;
 
@@ -9,8 +10,11 @@ import github.myacai.server.IHelloService;
  */
 public class ServerMain {
     public static void main(String[] args) {
-        IHelloService helloService = new HelloServiceImpl();
-        RpcServer rpcServer = new RpcServer();
-        rpcServer.register(helloService, 9999);
+        HelloServiceImpl helloService = new HelloServiceImpl();
+        DefaultServiceRegistry defaultServiceRegistry = new DefaultServiceRegistry();
+        // 手动注册
+        defaultServiceRegistry.register(helloService);
+        RpcServer rpcServer = new RpcServer(defaultServiceRegistry);
+        rpcServer.start(9999);
     }
 }
