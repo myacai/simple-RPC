@@ -1,6 +1,8 @@
 package github.myacai;
 
 import github.myacai.dto.RpcRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -11,6 +13,7 @@ import java.lang.reflect.Proxy;
  * @Date 2020/11/29 14:01
  */
 public class RpcClientProxy implements InvocationHandler {
+    private static final Logger logger = LoggerFactory.getLogger(RpcClientProxy.class);
     private String host;
     private int port;
 

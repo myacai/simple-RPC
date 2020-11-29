@@ -1,5 +1,7 @@
 package github.myacai;
 
+import github.myacai.enumeration.RpcErrorMessageEnum;
+import github.myacai.exception.RpcException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,9 +36,13 @@ public class RpcServer {
 
     /**
      * 服务端主动注册服务
-     * TODO 修改为注解然后扫描
+     * TODO 1.定义一个 hashmap 存放相关的service
+     *      2. 修改为扫描注解注册
      */
     public void register(Object service, int port) {
+        if (null == service) {
+            throw new RpcException(RpcErrorMessageEnum.SERVICE_CAN_NOT_BE_NULL);
+        }
         try (ServerSocket server = new ServerSocket(port);) {
             logger.info("server starts...");
             Socket socket;

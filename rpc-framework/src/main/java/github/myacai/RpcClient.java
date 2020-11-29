@@ -1,6 +1,10 @@
 package github.myacai;
 
 import github.myacai.dto.RpcRequest;
+import github.myacai.dto.RpcResponse;
+import github.myacai.enumeration.RpcErrorMessageEnum;
+import github.myacai.enumeration.RpcResponseCodeEnum;
+import github.myacai.exception.RpcException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,10 +26,18 @@ public class RpcClient {
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
             objectOutputStream.writeObject(rpcRequest);
             ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
-            return objectInputStream.readObject();
+            RpcResponse rpcResponse = (RpcResponse) objectInputStream.readObject();
+            if (rpcResponse == null) {
+                logger.error("调用服务失败,serviceName:{}", rpcRequest.getInterfaceName());
+                throw new RpcException(RpcErrorMessageEnum.SERVICE_INVOCATION_FAILURE, "interfaceName:" + rpcRequest.getInterfaceName());
+            }
+            if (rpcResponse.getCode() == null || !rpcResponse.getCode().equals(RpcResponseCodeEnum.SUCCESS.getCode())) {
+                logger.error("调用服务失败,serviceName:{},RpcResponse:{}", rpcRequest.getInterfaceName(), rpcResponse);
+                throw new RpcException(RpcErrorMessageEnum.SERVICE_INVOCATION_FAILURE, "interfaceName:" + rpcRequest.getInterfaceName());
+            }
+            return rpcResponse.getData();
         } catch (IOException | ClassNotFoundException e) {
-            logger.error("occur exception:", e);
+            throw new RpcException("调用服务失败:", e);
         }
-        return null;
     }
 }
