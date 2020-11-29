@@ -12,6 +12,7 @@
         <module>client</module>
         <module>server</module>
         <module>rpc-common</module>
+        <module>rpc-framework</module>
     </modules>
 
     <properties>
@@ -33,7 +34,13 @@
     </properties>
 
     <dependencies>
-
+        <!-- lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.8</version>
+            <scope>provided</scope>
+        </dependency>
         <!-- log -->
         <dependency>
             <groupId>org.slf4j</groupId>
