@@ -2,7 +2,6 @@ package github.myacai;
 
 import github.myacai.registry.DefaultServiceRegistry;
 import github.myacai.server.HelloServiceImpl;
-import github.myacai.server.IHelloService;
 
 /**
  * @Author cwb
@@ -14,7 +13,7 @@ public class ServerMain {
         DefaultServiceRegistry defaultServiceRegistry = new DefaultServiceRegistry();
         // 手动注册
         defaultServiceRegistry.register(helloService);
-        RpcServer rpcServer = new RpcServer(defaultServiceRegistry);
+        SocketRpcServer rpcServer = new SocketRpcServer(defaultServiceRegistry);
         rpcServer.start(9999);
     }
 }

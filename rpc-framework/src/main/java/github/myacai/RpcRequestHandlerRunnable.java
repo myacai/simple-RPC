@@ -1,6 +1,7 @@
 package github.myacai;
 import github.myacai.dto.RpcRequest;
 import github.myacai.dto.RpcResponse;
+import github.myacai.registry.DefaultServiceRegistry;
 import github.myacai.registry.ServiceRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,13 +17,15 @@ import java.net.Socket;
 public class RpcRequestHandlerRunnable implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(RpcRequestHandlerRunnable.class);
     private Socket socket;
-    private RpcRequestHandler rpcRequestHandler;
-    private ServiceRegistry serviceRegistry;
+    private static RpcRequestHandler rpcRequestHandler;
+    private static ServiceRegistry serviceRegistry;
+    static {
+        rpcRequestHandler=new RpcRequestHandler();
+        serviceRegistry = new DefaultServiceRegistry();
+    }
 
-    public RpcRequestHandlerRunnable(Socket socket, RpcRequestHandler rpcRequestHandler, ServiceRegistry serviceRegistry) {
+    public RpcRequestHandlerRunnable(Socket socket) {
         this.socket = socket;
-        this.rpcRequestHandler = rpcRequestHandler;
-        this.serviceRegistry = serviceRegistry;
     }
 
     @Override

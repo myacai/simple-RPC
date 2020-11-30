@@ -1,7 +1,5 @@
 package github.myacai;
 
-import github.myacai.enumeration.RpcErrorMessageEnum;
-import github.myacai.exception.RpcException;
 import github.myacai.registry.ServiceRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +19,7 @@ import java.util.concurrent.TimeUnit;
  * @Author cwb
  * @Date 2020/11/29 14:02
  */
-public class RpcServer {
+public class SocketRpcServer {
     /**
      * 线程池参数
      */
@@ -30,12 +28,9 @@ public class RpcServer {
     private static final int KEEP_ALIVE_TIME = 1;
     private static final int BLOCKING_QUEUE_CAPACITY = 100;
     private ExecutorService threadPool;
-    private RpcRequestHandler rpcRequestHandler = new RpcRequestHandler();
-    private static final Logger logger = LoggerFactory.getLogger(RpcServer.class);
-    private final ServiceRegistry serviceRegistry;
+    private static final Logger logger = LoggerFactory.getLogger(SocketRpcServer.class);
 
-    public RpcServer(ServiceRegistry serviceRegistry) {
-        this.serviceRegistry = serviceRegistry;
+    public SocketRpcServer() {
         BlockingQueue<Runnable> workQueue = new ArrayBlockingQueue<>(BLOCKING_QUEUE_CAPACITY);
         ThreadFactory threadFactory = Executors.defaultThreadFactory();
         this.threadPool = new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE_SIZE, KEEP_ALIVE_TIME, TimeUnit.MINUTES, workQueue, threadFactory);
@@ -48,7 +43,7 @@ public class RpcServer {
             Socket socket;
             while ((socket = server.accept()) != null) {
                 logger.info("client connected");
-                threadPool.execute(new RpcRequestHandlerRunnable(socket, rpcRequestHandler, serviceRegistry));
+                threadPool.execute(new RpcRequestHandlerRunnable(socket));
             }
             threadPool.shutdown();
         } catch (IOException e) {
